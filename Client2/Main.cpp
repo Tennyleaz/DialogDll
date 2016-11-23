@@ -5,7 +5,7 @@
 #include "ReturnStruct.h"
 
 #define STDCALL    __cdecl
-typedef ReturnStruct (STDCALL *StartDialogFunc)(int);
+typedef ReturnStruct (STDCALL *StartDialogFunc)(string, string);
 
 #pragma comment(linker, \
   "\"/manifestdependency:type='Win32' "\
@@ -44,13 +44,21 @@ INT_PTR CALLBACK DialogProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			}
 
 			isChildActive = true;
-			ReturnStruct r = StartDialog(3);
+			ReturnStruct r = StartDialog("I am title", "I am text");
 
-			HWND wnd = FindWindow(NULL, L"MyApp");
+			if (r.buttonState == true)
+			{
+				if (r.s.length() > 0)
+					SetDlgItemTextA(hDlg, ID_ReturnText, r.s.c_str());
+				else
+					SetDlgItemTextA(hDlg, ID_ReturnText, "(Nothing to show)");
+			}
+
+			/*HWND wnd = FindWindow(NULL, L"MyApp");
 			if (wnd)
 			{
 				MessageBox(NULL, TEXT("MyApp found"), NULL, MB_OK);
-			}
+			}*/
 		}
 		case IDCANCEL:
 			SendMessage(hDlg, WM_CLOSE, 0, 0);

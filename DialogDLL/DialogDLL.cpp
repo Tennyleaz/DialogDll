@@ -23,6 +23,8 @@ using namespace std;
 HINSTANCE hInstance = 0;
 int inputInt;
 ReturnStruct r;
+string gInTitle;
+string gInText;
 
 BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReserved)
 {
@@ -31,10 +33,14 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReser
 	return TRUE;
 }
 
-ReturnStruct StartDialog(int i)
+ReturnStruct StartDialog(string inTitle, string inText)
 {
-	inputInt = i;
+	//inputInt = i;
+	gInTitle = inTitle;
+	gInText = inText;
+
 	DialogBox(hInstance, MAKEINTRESOURCE(IDD_CHILD_DIALOG), NULL, DialogProc);
+
 	return r;
 }
 
@@ -54,6 +60,10 @@ BOOL OnDialogInit(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	r.buttonState = false;
 	r.s = "nothing yet";
+
+	SetWindowTextA(hwnd, gInTitle.c_str());
+	SetDlgItemTextA(hwnd, ID_StaticText, gInText.c_str());
+
 	return TRUE;
 }
 
@@ -76,7 +86,7 @@ BOOL OnDialogButtonExitClicked(HWND hwnd, UINT message, WPARAM wParam, LPARAM lP
 	wstring ws(out);
 	string outString(ws.begin(), ws.end());
 
-	r.buttonState = true;
+	r.buttonState = false;
 	r.s = outString;
 
 	OnDialogClose(hwnd, message, wParam, lParam);

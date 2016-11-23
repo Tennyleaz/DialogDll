@@ -1,4 +1,6 @@
 #pragma once
+#include <iostream>
+
 BOOL CALLBACK DialogProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
 #define DllExport  __declspec(dllexport)
 #define STDCALL    __cdecl
@@ -7,7 +9,7 @@ BOOL CALLBACK DialogProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
 extern "C" {
 #endif
 
-	DllExport ReturnStruct STDCALL StartDialog(int);
+	DllExport ReturnStruct STDCALL StartDialog(std::string, std::string);
 
 #if __cplusplus
 };
