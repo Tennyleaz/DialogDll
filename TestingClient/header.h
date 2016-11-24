@@ -5,7 +5,16 @@
 
 #include <windows.h>
 
+using namespace std;
+struct ReturnStruct
+{
+	bool buttonState;
+	string s;
+};
+
+
+
 #define STDCALL    __cdecl
-typedef INT_PTR(STDCALL *StartDialogFunc)(VOID);
+typedef ReturnStruct(STDCALL *StartDialogFunc)(string, string);
 
 #endif /* __HEADER_H__ */

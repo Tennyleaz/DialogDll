@@ -1,5 +1,6 @@
 #include <iostream>
 #include <windows.h>
+#include <string>
 #include "header.h"
 using namespace std;
 
@@ -7,13 +8,13 @@ void main(void)
 {
 	cout << "testing app" << endl;
 
-	HINSTANCE hInstance;  //HINSTANCE需要包含windows.h
+	/*HINSTANCE hInstance;  //HINSTANCE需要包含windows.h
 	typedef int (Func)(int);  //定義函數原型
 	typedef int (Func2)(HINSTANCE hInst, HINSTANCE h0, LPTSTR lpCmdLine, int nCmdShow);  //定義函數原型
 	Func* pFunc = nullptr;  //聲明函數指針
-	Func2* pFunc2 = nullptr;
+	Func2* pFunc2 = nullptr;*/
 
-	//返回由LoadLibrary加載的動態鏈接庫的實例句柄
+	/*//返回由LoadLibrary加載的動態鏈接庫的實例句柄
 	hInstance = LoadLibrary(L"DialogDLL.dll");
 
 	if (!hInstance)
@@ -39,12 +40,12 @@ void main(void)
 		cout << "function loaded!" << endl;
 
 	//using my dl functions
-	cout << "pFunc(3)=" << pFunc(3) << endl;
+	cout << "pFunc(3)=" << pFunc(3) << endl;*/
 
 	
 
 
-	HMODULE hDll;
+	HINSTANCE hDll;
 	StartDialogFunc StartDialog;
 	hDll = LoadLibrary(TEXT("DialogDLL.dll"));
 	if (!hDll) {
@@ -53,9 +54,18 @@ void main(void)
 		return;
 	}
 	StartDialog = (StartDialogFunc)GetProcAddress(hDll, "StartDialog");
-	StartDialog();
+	ReturnStruct r = StartDialog("I have a title", "I have a text");
 
+	string btnstate;
+	if (r.buttonState)
+		btnstate = "OK";
+	else
+		btnstate = "Cancel";
+	
+	cout << "returned text is:" << r.s << endl;
+	cout << "you have pressed the " << btnstate << " button." << endl;
 
+	FreeLibrary(hDll);
 	system("pause");
 	return;
 }
