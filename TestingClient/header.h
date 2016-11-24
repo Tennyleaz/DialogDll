@@ -15,6 +15,6 @@ struct ReturnStruct
 
 
 #define STDCALL    __cdecl
-typedef ReturnStruct(STDCALL *StartDialogFunc)(string, string);
+typedef ReturnStruct(STDCALL *StartDialogFunc)(wstring, wstring);
 
 #endif /* __HEADER_H__ */

@@ -5,7 +5,7 @@
 #include "ReturnStruct.h"
 
 #define STDCALL    __cdecl
-typedef ReturnStruct (STDCALL *StartDialogFunc)(string, string);
+typedef ReturnStruct (STDCALL *StartDialogFunc)(wstring, wstring);
 
 #pragma comment(linker, \
   "\"/manifestdependency:type='Win32' "\
@@ -24,10 +24,13 @@ INT_PTR CALLBACK DialogProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	switch (uMsg)
 	{
 	case WM_INITDIALOG:  //WM_CREATE is not used for DialogProc !
+	{
 		SetDlgItemTextA(hwnd, ID_EditTitle, "I am title");
 		SetDlgItemTextA(hwnd, ID_EditText, "I am text");
+		/*string s = "¸Õ¸Õ¬Ý";
+		SetDlgItemTextA(hwnd, ID_ReturnText, s.c_str());*/
 		break;
-
+	}
 	case WM_COMMAND:
 		switch (LOWORD(wParam))
 		{
@@ -53,24 +56,24 @@ INT_PTR CALLBACK DialogProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 			//getting text boxt items
 			WCHAR out[50] = {};
-			GetDlgItemText(hwnd, ID_EditTitle, out, 50);
+			GetDlgItemTextW(hwnd, ID_EditTitle, out, 50);
 			wstring ws(out);
-			string title(ws.begin(), ws.end());
+			//string title(ws.begin(), ws.end());
 
 			memset(out, 0, 50);
-			GetDlgItemText(hwnd, ID_EditText, out, 50);
+			GetDlgItemTextW(hwnd, ID_EditText, out, 50);
 			wstring ws2(out);
-			string text(ws2.begin(), ws2.end());
+			//string text(ws2.begin(), ws2.end());
 
 			//make the input structure, start the dll dialog
-			ReturnStruct r = StartDialog(title, text);
+			ReturnStruct r = StartDialog(ws, ws2);
 
 			//change the text after dll returns
 			if (r.buttonState == true)
 			{
 				SetDlgItemTextA(hwnd, ID_ButtonIndicator, "You pressed the OK button.");
 				if (r.s.length() > 0)
-					SetDlgItemTextA(hwnd, ID_ReturnText, r.s.c_str());
+					SetDlgItemTextW(hwnd, ID_ReturnText, r.s.c_str());
 				else
 					SetDlgItemTextA(hwnd, ID_ReturnText, "(Nothing to show)");
 			}

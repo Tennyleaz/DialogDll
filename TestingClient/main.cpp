@@ -53,8 +53,14 @@ void main(void)
 		MessageBox(NULL, TEXT("Cannot load DialogDLL.dll"), NULL, MB_OK);
 		return;
 	}
+
+	wstring in;
+	cout << "key in yout title:";
+	wcin >> in;
+
+
 	StartDialog = (StartDialogFunc)GetProcAddress(hDll, "StartDialog");
-	ReturnStruct r = StartDialog("I have a title", "I have a text");
+	ReturnStruct r = StartDialog(in, L"I have a text");
 
 	string btnstate;
 	if (r.buttonState)

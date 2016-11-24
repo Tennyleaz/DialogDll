@@ -4,6 +4,7 @@
 #include "resource.h"
 #include "DialogDLL.h"
 #include <string>
+//#include "atlconv.h"
 using namespace std;
 
 
@@ -11,8 +12,8 @@ using namespace std;
 HINSTANCE hInstance = 0;
 int inputInt;
 ReturnStruct r;
-string gInTitle;
-string gInText;
+wstring gInTitle;
+wstring gInText;
 
 BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReserved)
 {
@@ -21,7 +22,8 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReser
 	return TRUE;
 }
 
-ReturnStruct StartDialog(string inTitle, string inText)
+//the exported function for clients to call in DLL
+ReturnStruct StartDialog(wstring inTitle, wstring inText)
 {
 	gInTitle = inTitle;
 	gInText = inText;
@@ -45,11 +47,13 @@ BOOL CALLBACK DialogProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 BOOL OnDialogInit(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	r.buttonState = false;
-	r.s = "nothing yet";
+	//USES_CONVERSION;
 
-	SetWindowTextA(hwnd, gInTitle.c_str());
-	SetDlgItemTextA(hwnd, ID_StaticText, gInText.c_str());
+	r.buttonState = false;
+	r.s = L"nothing yet";
+
+	SetWindowTextW(hwnd, gInTitle.c_str());
+	SetDlgItemTextW(hwnd, ID_StaticText, gInText.c_str());
 
 	return TRUE;
 }
@@ -69,12 +73,12 @@ BOOL OnDialogClose(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 BOOL OnDialogButtonExitClicked(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	WCHAR out[50] = {};
-	GetDlgItemText(hwnd, ID_TextBox, out, 50);
+	GetDlgItemTextW(hwnd, ID_TextBox, out, 50);
 	wstring ws(out);
-	string outString(ws.begin(), ws.end());
+	//string outString(ws.begin(), ws.end());
 
 	r.buttonState = false;
-	r.s = outString;
+	r.s = ws;
 
 	OnDialogClose(hwnd, message, wParam, lParam);
 	return TRUE;
@@ -83,12 +87,12 @@ BOOL OnDialogButtonExitClicked(HWND hwnd, UINT message, WPARAM wParam, LPARAM lP
 BOOL OnDialogButtonSayHiClicked(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	WCHAR out[50] = {};
-	GetDlgItemText(hwnd, ID_TextBox, out, 50);
+	GetDlgItemTextW(hwnd, ID_TextBox, out, 50);
 	wstring ws(out);
-	string outString(ws.begin(), ws.end());
+	//string outString(ws.begin(), ws.end());
 
 	r.buttonState = true;
-	r.s = outString;
+	r.s = ws;
 
 	/*string s = "Hi, :D\n" + to_string(inputInt);
 	MessageBoxA(hwnd, s.c_str(), "DLL", MB_OK);*/

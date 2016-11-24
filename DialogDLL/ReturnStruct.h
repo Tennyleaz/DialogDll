@@ -3,5 +3,5 @@
 struct ReturnStruct
 {
 	bool buttonState;
-	std::string s;
+	std::wstring s;
 };

@@ -4,5 +4,5 @@ using namespace std;
 struct ReturnStruct
 {
 	bool buttonState;
-	string s;
+	wstring s;
 };

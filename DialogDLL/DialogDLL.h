@@ -3,8 +3,6 @@
 #define _WIN32_WINNT 0x0501
 #define WIN32_LEAN_AND_MEAN
 
-//define the main program
-BOOL CALLBACK DialogProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
 #define DllExport  __declspec(dllexport)
 #define STDCALL    __cdecl
 
@@ -13,7 +11,7 @@ BOOL CALLBACK DialogProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
 extern "C" {
 #endif
 
-	DllExport ReturnStruct STDCALL StartDialog(std::string, std::string);
+	DllExport ReturnStruct STDCALL StartDialog(std::wstring, std::wstring);
 
 #if __cplusplus
 };
@@ -28,6 +26,8 @@ extern "C" {
     if((message == WM_COMMAND) && (LOWORD(wParam) == Identifier))\
     return MessageCallback(hwnd, message, wParam, lParam);
 
+//define the main program
+BOOL CALLBACK DialogProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
 
 //other member functions
 BOOL OnDialogInit(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
