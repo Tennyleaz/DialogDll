@@ -1,4 +1,4 @@
-// DialogDLL.cpp : ©w¸q DLL À³¥Îµ{¦¡ªº¶×¥X¨ç¦¡¡C
+ï»¿// DialogDLL.cpp : å®šç¾© DLL æ‡‰ç”¨ç¨‹å¼çš„åŒ¯å‡ºå‡½å¼ã€‚
 #include "stdafx.h"
 #include <windows.h>
 #include "resource.h"

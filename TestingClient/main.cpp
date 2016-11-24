@@ -1,4 +1,4 @@
-#include <iostream>
+ï»¿#include <iostream>
 #include <windows.h>
 #include <string>
 #include "header.h"
@@ -8,13 +8,13 @@ void main(void)
 {
 	cout << "testing app" << endl;
 
-	/*HINSTANCE hInstance;  //HINSTANCE»İ­n¥]§twindows.h
-	typedef int (Func)(int);  //©w¸q¨ç¼Æ­ì«¬
-	typedef int (Func2)(HINSTANCE hInst, HINSTANCE h0, LPTSTR lpCmdLine, int nCmdShow);  //©w¸q¨ç¼Æ­ì«¬
-	Func* pFunc = nullptr;  //Án©ú¨ç¼Æ«ü°w
+	/*HINSTANCE hInstance;  //HINSTANCEéœ€è¦åŒ…å«windows.h
+	typedef int (Func)(int);  //å®šç¾©å‡½æ•¸åŸå‹
+	typedef int (Func2)(HINSTANCE hInst, HINSTANCE h0, LPTSTR lpCmdLine, int nCmdShow);  //å®šç¾©å‡½æ•¸åŸå‹
+	Func* pFunc = nullptr;  //è²æ˜å‡½æ•¸æŒ‡é‡
 	Func2* pFunc2 = nullptr;*/
 
-	/*//ªğ¦^¥ÑLoadLibrary¥[¸üªº°ÊºAÃì±µ®wªº¹ê¨Ò¥y¬`
+	/*//è¿”å›ç”±LoadLibraryåŠ è¼‰çš„å‹•æ…‹éˆæ¥åº«çš„å¯¦ä¾‹å¥æŸ„
 	hInstance = LoadLibrary(L"DialogDLL.dll");
 
 	if (!hInstance)
@@ -26,7 +26,7 @@ void main(void)
 	else
 		cout << "dll loaded!" << endl;
 
-	//§ä¨ìDLL¤¤ShowDialog¨ç¼Æªº¦a§}¡A¨ç¼Æ¦W½Õ¥Î
+	//æ‰¾åˆ°DLLä¸­ShowDialogå‡½æ•¸çš„åœ°å€ï¼Œå‡½æ•¸åèª¿ç”¨
 	pFunc = (Func*)GetProcAddress(hInstance, "test");
 	pFunc2 = (Func2*)GetProcAddress(hInstance, "DialogMain");
 
@@ -42,7 +42,7 @@ void main(void)
 	//using my dl functions
 	cout << "pFunc(3)=" << pFunc(3) << endl;*/
 
-	
+
 
 
 	HINSTANCE hDll;
@@ -54,21 +54,27 @@ void main(void)
 		return;
 	}
 
-	wstring in;
-	cout << "key in yout title:";
-	wcin >> in;
 
+	//let wcin can read chinese
+	setlocale(LC_ALL, "");
+	ios_base::sync_with_stdio(false); // ç¼ºå°‘çš„è©±ï¼Œwcout wchar_t æœƒæ¼æ‰ä¸­æ–‡
+	wcin.imbue(locale(""));
+	wcout.imbue(locale(""));
+
+	wstring win;
+	cout << "key in yout title:";
+	wcin >> win;
 
 	StartDialog = (StartDialogFunc)GetProcAddress(hDll, "StartDialog");
-	ReturnStruct r = StartDialog(in, L"I have a text");
+	ReturnStruct r = StartDialog(win, L"I have a text");
 
 	string btnstate;
 	if (r.buttonState)
 		btnstate = "OK";
 	else
 		btnstate = "Cancel";
-	
-	cout << "returned text is:" << r.s << endl;
+
+	wcout << "returned text is:" << r.s << endl;
 	cout << "you have pressed the " << btnstate << " button." << endl;
 
 	FreeLibrary(hDll);

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 // header.h
 #ifndef __HEADER_H__
 #define __HEADER_H__
@@ -9,7 +9,7 @@ using namespace std;
 struct ReturnStruct
 {
 	bool buttonState;
-	string s;
+	wstring s;
 };
 
 

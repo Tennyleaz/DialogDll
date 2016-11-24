@@ -1,4 +1,4 @@
-#include <Windows.h>
+﻿#include <Windows.h>
 #include <CommCtrl.h>
 #include <tchar.h>
 #include "resource.h"
@@ -27,7 +27,7 @@ INT_PTR CALLBACK DialogProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		SetDlgItemTextA(hwnd, ID_EditTitle, "I am title");
 		SetDlgItemTextA(hwnd, ID_EditText, "I am text");
-		/*string s = "�ոլ�";
+		/*string s = "試試看";
 		SetDlgItemTextA(hwnd, ID_ReturnText, s.c_str());*/
 		break;
 	}
