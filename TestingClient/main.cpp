@@ -61,18 +61,21 @@ void main(void)
 	wcin.imbue(locale(""));
 	wcout.imbue(locale(""));
 
-	wstring win;
+	wstring win, win2;
 	cout << "key in yout title:";
-	wcin >> win;
+	getline(wcin, win);
+
+	cout << "key in yout text:";
+	getline(wcin, win2);
 
 	StartDialog = (StartDialogFunc)GetProcAddress(hDll, "StartDialog");
-	ReturnStruct r = StartDialog(win, L"I have a text");
+	ReturnStruct r = StartDialog(win, win2);
 
 	string btnstate;
 	if (r.buttonState)
-		btnstate = "OK";
+		btnstate = "[OK]";
 	else
-		btnstate = "Cancel";
+		btnstate = "[Cancel]";
 
 	wcout << "returned text is:" << r.s << endl;
 	cout << "you have pressed the " << btnstate << " button." << endl;

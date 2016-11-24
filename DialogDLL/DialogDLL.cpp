@@ -72,8 +72,8 @@ BOOL OnDialogClose(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 BOOL OnDialogButtonExitClicked(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	WCHAR out[50] = {};
-	GetDlgItemTextW(hwnd, ID_TextBox, out, 50);
+	WCHAR out[150] = {};
+	GetDlgItemTextW(hwnd, ID_TextBox, out, 150);
 	wstring ws(out);
 	//string outString(ws.begin(), ws.end());
 
@@ -86,8 +86,8 @@ BOOL OnDialogButtonExitClicked(HWND hwnd, UINT message, WPARAM wParam, LPARAM lP
 
 BOOL OnDialogButtonSayHiClicked(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	WCHAR out[50] = {};
-	GetDlgItemTextW(hwnd, ID_TextBox, out, 50);
+	WCHAR out[150] = {};
+	GetDlgItemTextW(hwnd, ID_TextBox, out, 150);
 	wstring ws(out);
 	//string outString(ws.begin(), ws.end());
 

@@ -27,8 +27,6 @@ INT_PTR CALLBACK DialogProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		SetDlgItemTextA(hwnd, ID_EditTitle, "I am title");
 		SetDlgItemTextA(hwnd, ID_EditText, "I am text");
-		/*string s = "試試看";
-		SetDlgItemTextA(hwnd, ID_ReturnText, s.c_str());*/
 		break;
 	}
 	case WM_COMMAND:
@@ -55,15 +53,13 @@ INT_PTR CALLBACK DialogProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			isChildActive = true;
 
 			//getting text boxt items
-			WCHAR out[50] = {};
-			GetDlgItemTextW(hwnd, ID_EditTitle, out, 50);
+			WCHAR out[150] = {};
+			GetDlgItemTextW(hwnd, ID_EditTitle, out, 150);
 			wstring ws(out);
-			//string title(ws.begin(), ws.end());
 
-			memset(out, 0, 50);
-			GetDlgItemTextW(hwnd, ID_EditText, out, 50);
+			memset(out, 0, 150);
+			GetDlgItemTextW(hwnd, ID_EditText, out, 150);
 			wstring ws2(out);
-			//string text(ws2.begin(), ws2.end());
 
 			//make the input structure, start the dll dialog
 			ReturnStruct r = StartDialog(ws, ws2);
@@ -71,22 +67,16 @@ INT_PTR CALLBACK DialogProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			//change the text after dll returns
 			if (r.buttonState == true)
 			{
-				SetDlgItemTextA(hwnd, ID_ButtonIndicator, "You pressed the OK button.");
+				SetDlgItemTextA(hwnd, ID_ButtonIndicator, "You pressed the [OK] button.");
 				if (r.s.length() > 0)
 					SetDlgItemTextW(hwnd, ID_ReturnText, r.s.c_str());
 				else
 					SetDlgItemTextA(hwnd, ID_ReturnText, "(Nothing to show)");
 			}
 			else
-				SetDlgItemTextA(hwnd, ID_ButtonIndicator, "You pressed the Cancel button.");
+				SetDlgItemTextA(hwnd, ID_ButtonIndicator, "You pressed the [Cancel] button.");
 
 			FreeLibrary(dllHandler);
-
-			/*HWND wnd = FindWindow(NULL, L"MyApp");
-			if (wnd)
-			{
-				MessageBox(NULL, TEXT("MyApp found"), NULL, MB_OK);
-			}*/
 		}
 		case IDCANCEL:
 			SendMessage(hwnd, WM_CLOSE, 0, 0);
