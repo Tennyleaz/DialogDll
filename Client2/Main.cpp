@@ -19,40 +19,65 @@ typedef ReturnStruct (STDCALL *StartDialogFunc)(string, string);
 
 bool isChildActive;
 
-INT_PTR CALLBACK DialogProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
+INT_PTR CALLBACK DialogProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
+	case WM_INITDIALOG:  //WM_CREATE is not used for DialogProc !
+		SetDlgItemTextA(hwnd, ID_EditTitle, "I am title");
+		SetDlgItemTextA(hwnd, ID_EditText, "I am text");
+		break;
+
 	case WM_COMMAND:
 		switch (LOWORD(wParam))
 		{
 		case IDOK:
 		{
-			HMODULE hDll;
+			HMODULE dllHandler;
 			StartDialogFunc StartDialog;
 
-			hDll = LoadLibrary(TEXT("DialogDLL.dll"));
-			if (!hDll) {
+			//getting the dll and the function in dll
+			dllHandler = LoadLibrary(TEXT("DialogDLL.dll"));
+			if (!dllHandler) {
 				MessageBox(NULL, TEXT("Cannot load DialogDLL.dll"), NULL, MB_OK);
 				return -1;
 			}
 
-			StartDialog = (StartDialogFunc)GetProcAddress(hDll, "StartDialog");
+			StartDialog = (StartDialogFunc)GetProcAddress(dllHandler, "StartDialog");
 			if (!StartDialog) {
 				MessageBox(NULL, TEXT("Cannot load function StartDialog"), NULL, MB_OK);
 				return -1;
 			}
 
 			isChildActive = true;
-			ReturnStruct r = StartDialog("I am title", "I am text");
 
+			//getting text boxt items
+			WCHAR out[50] = {};
+			GetDlgItemText(hwnd, ID_EditTitle, out, 50);
+			wstring ws(out);
+			string title(ws.begin(), ws.end());
+
+			memset(out, 0, 50);
+			GetDlgItemText(hwnd, ID_EditText, out, 50);
+			wstring ws2(out);
+			string text(ws2.begin(), ws2.end());
+
+			//make the input structure, start the dll dialog
+			ReturnStruct r = StartDialog(title, text);
+
+			//change the text after dll returns
 			if (r.buttonState == true)
 			{
+				SetDlgItemTextA(hwnd, ID_ButtonIndicator, "You pressed the OK button.");
 				if (r.s.length() > 0)
-					SetDlgItemTextA(hDlg, ID_ReturnText, r.s.c_str());
+					SetDlgItemTextA(hwnd, ID_ReturnText, r.s.c_str());
 				else
-					SetDlgItemTextA(hDlg, ID_ReturnText, "(Nothing to show)");
+					SetDlgItemTextA(hwnd, ID_ReturnText, "(Nothing to show)");
 			}
+			else
+				SetDlgItemTextA(hwnd, ID_ButtonIndicator, "You pressed the Cancel button.");
+
+			FreeLibrary(dllHandler);
 
 			/*HWND wnd = FindWindow(NULL, L"MyApp");
 			if (wnd)
@@ -61,7 +86,7 @@ INT_PTR CALLBACK DialogProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			}*/
 		}
 		case IDCANCEL:
-			SendMessage(hDlg, WM_CLOSE, 0, 0);
+			SendMessage(hwnd, WM_CLOSE, 0, 0);
 			return TRUE;
 		}
 		break;
@@ -73,9 +98,9 @@ INT_PTR CALLBACK DialogProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			return true;
 		}
 
-		if (MessageBox(hDlg, TEXT("Close the program?"), TEXT("Close"), MB_ICONQUESTION | MB_YESNO) == IDYES)
+		if (MessageBox(hwnd, TEXT("Close the program?"), TEXT("Close"), MB_ICONQUESTION | MB_YESNO) == IDYES)
 		{
-			DestroyWindow(hDlg);
+			DestroyWindow(hwnd);
 		}
 		return TRUE;
 
@@ -95,21 +120,21 @@ INT_PTR CALLBACK DialogProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 int WINAPI _tWinMain(HINSTANCE hInst, HINSTANCE h0, LPTSTR lpCmdLine, int nCmdShow)
 {
-	HWND hDlg;
+	HWND hwnd;
 	MSG msg;
-	BOOL ret;
+	BOOL isSuccess;
 	InitCommonControls();
 
 	isChildActive = false;
 
-	hDlg = CreateDialogParam(hInst, MAKEINTRESOURCE(IDD_DIALOG1), 0, DialogProc, 0);
-	ShowWindow(hDlg, nCmdShow);
+	hwnd = CreateDialogParam(hInst, MAKEINTRESOURCE(IDD_DIALOG1), 0, DialogProc, 0);
+	ShowWindow(hwnd, nCmdShow);
 
-	while ((ret = GetMessage(&msg, 0, 0, 0)) != 0) {
-		if (ret == -1)
+	while ((isSuccess = GetMessage(&msg, 0, 0, 0)) != 0) {
+		if (isSuccess == -1)
 			return -1;
 
-		if (!IsDialogMessage(hDlg, &msg)) {
+		if (!IsDialogMessage(hwnd, &msg)) {
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}

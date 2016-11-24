@@ -1,22 +1,10 @@
 // DialogDLL.cpp : 定義 DLL 應用程式的匯出函式。
-#define _WIN32_WINNT 0x0501
-#define WIN32_LEAN_AND_MEAN
-
 #include "stdafx.h"
 #include <windows.h>
 #include "resource.h"
 #include "DialogDLL.h"
-#include <iostream>
 #include <string>
 using namespace std;
-
-#define MESSAGE_MAP(MessageParam, MessageCallback)\
-    if(message == MessageParam)\
-        return MessageCallback(hwnd, message, wParam, lParam)
-
-#define MESSAGE_MAP_COMMAND(Identifier, MessageCallback)\
-    if((message == WM_COMMAND) && (LOWORD(wParam) == Identifier))\
-    return MessageCallback(hwnd, message, wParam, lParam);
 
 
 // FIXME: There is a better way by passing the hInstance as a parameter to StartDialog
@@ -35,7 +23,6 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReser
 
 ReturnStruct StartDialog(string inTitle, string inText)
 {
-	//inputInt = i;
 	gInTitle = inTitle;
 	gInText = inText;
 
